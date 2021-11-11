@@ -10,8 +10,8 @@ import com.example.android.trackmysleepquality.database.SleepNight
 
 class SleepNightAdapter : RecyclerView.Adapter<TextItemViewHolder>() {
 
-//    private var data: List<SleepNight> =  listOf<SleepNight>()
-
+    // When notifyDataSetChanged() is called, the RecyclerView redraws the whole list,
+    // not just the changed items
     var data = listOf<SleepNight>()
         set(value) {
             field = value
