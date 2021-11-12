@@ -22,12 +22,13 @@ import androidx.lifecycle.*
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.formatNights
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * ViewModel for SleepTrackerFragment.
+ *
+ * You should usually handle clicks in the ViewModel. The ViewModel has access to the data
+ * and logic for determining what needs to happen in response to the click.
  */
 class SleepTrackerViewModel(
     val database: SleepDatabaseDao,
@@ -61,6 +62,10 @@ class SleepTrackerViewModel(
 
     val showSnackBarEvent: LiveData<Boolean>
         get() = _showSnackbarEvent
+
+    private val _navigateToSleepDetail = MutableLiveData<Long>()
+    val navigateToSleepDetail
+        get() = _navigateToSleepDetail
 
 
     init {
@@ -129,6 +134,14 @@ class SleepTrackerViewModel(
 
     fun doneShowingSnackbar() {
         _showSnackbarEvent.value = false
+    }
+
+    fun onSleepNightClicked(id: Long) {
+        _navigateToSleepDetail.value = id
+    }
+
+    fun onSleepDetailNavigated() {
+        _navigateToSleepDetail.value = null
     }
 
 
