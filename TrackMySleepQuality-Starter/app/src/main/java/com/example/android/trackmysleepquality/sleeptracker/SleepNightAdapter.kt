@@ -4,24 +4,35 @@ import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.convertDurationToFormatted
-import com.example.android.trackmysleepquality.convertLongToDateString
 import com.example.android.trackmysleepquality.convertNumericQualityToString
 import com.example.android.trackmysleepquality.database.SleepNight
+import com.example.android.trackmysleepquality.databinding.ListItemSleepNightBinding
 
-class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.SleepViewHolder>() {
+class SleepNightAdapter : ListAdapter<SleepNight, SleepNightAdapter.SleepViewHolder>(SleepNightDiffCallback()) {
 
-    // When notifyDataSetChanged() is called, the RecyclerView redraws the whole list,
-    // not just the changed items
-    var data = listOf<SleepNight>()
+    /*
+     When notifyDataSetChanged() is called, the RecyclerView redraws the whole list,
+     not just the changed items. This marks the entire list as potentially invalid.
+     As a result, RecyclerView rebinds and redraws every item in the list,
+     including items that are not visible on screen. This is a lot of unnecessary work.
+     RecyclerView has a class called DiffUtil which is for calculating the differences
+     between two lists.
+     It uses an algorithm called Eugene W. Myers's difference algorithm to figure out
+     the minimum number of changes to make from the old list to produce the new list.
+     Once DiffUtil figures out what has changed, RecyclerView can use that information
+     to update only the items that were changed, added, removed, or moved, which is much
+     more efficient than redoing the entire list.
+     */
+/*    var data = listOf<SleepNight>()
         set(value) {
             field = value
             notifyDataSetChanged()
-        }
+        }*/
 
 
     /**
@@ -73,7 +84,8 @@ class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.SleepViewHolder
      * @param position The position of the item within the adapter's data set.
      */
     override fun onBindViewHolder(holder: SleepViewHolder, position: Int) {
-        val item: SleepNight = data[position]
+//        val item: SleepNight = data[position]
+        val item: SleepNight = getItem(position)
         holder.bind(item)
     }
 
@@ -82,41 +94,55 @@ class SleepNightAdapter : RecyclerView.Adapter<SleepNightAdapter.SleepViewHolder
      *
      * @return The total number of items in this adapter.
      */
-    override fun getItemCount() = data.size
+//    override fun getItemCount() = data.size
 
-    class SleepViewHolder private constructor(itemView: View): RecyclerView.ViewHolder(itemView) {
-
-        val sleepLength: TextView = itemView.findViewById(R.id.sleep_length)
-        val quality: TextView = itemView.findViewById(R.id.quality_string)
-        val qualityImage: ImageView = itemView.findViewById(R.id.quality_image)
+    class SleepViewHolder private constructor(val binding: ListItemSleepNightBinding): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
             item: SleepNight
         ) {
-            val res: Resources = itemView.context.resources
-            sleepLength.text =
-                convertDurationToFormatted(item.startTimeMilli, item.endTimeMilli, res)
-            quality.text = convertNumericQualityToString(item.sleepQuality, res)
-            qualityImage.setImageResource(
-                when (item.sleepQuality) {
-                    0 -> R.drawable.ic_sleep_0
-                    1 -> R.drawable.ic_sleep_1
-                    2 -> R.drawable.ic_sleep_2
-                    3 -> R.drawable.ic_sleep_3
-                    4 -> R.drawable.ic_sleep_4
-                    5 -> R.drawable.ic_sleep_5
-                    else -> R.drawable.ic_sleep_active
-                }
-            )
+            binding.sleep = item
+            // Usefull when using binding adapters in a RecyclerView
+            binding.executePendingBindings()
+//            val res: Resources = itemView.context.resources
+//                /*        val sleepLength: TextView = binding.findViewById(R.id.sleep_length)
+//        val quality: TextView = binding.findViewById(R.id.quality_string)
+//        val qualityImage: ImageView = binding.findViewById(R.id.quality_image)*/
+//            binding.sleepLength.text =
+//                convertDurationToFormatted(item.startTimeMilli, item.endTimeMilli, res)
+//            binding.qualityString.text = convertNumericQualityToString(item.sleepQuality, res)
+//            binding.qualityImage.setImageResource(
+//                when (item.sleepQuality) {
+//                    0 -> R.drawable.ic_sleep_0
+//                    1 -> R.drawable.ic_sleep_1
+//                    2 -> R.drawable.ic_sleep_2
+//                    3 -> R.drawable.ic_sleep_3
+//                    4 -> R.drawable.ic_sleep_4
+//                    5 -> R.drawable.ic_sleep_5
+//                    else -> R.drawable.ic_sleep_active
+//                }
+//            )
         }
         companion object {
             fun from(parent: ViewGroup): SleepViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val view: View = layoutInflater
-                    .inflate(R.layout.list_item_sleep_night, parent, false)
-                return SleepViewHolder(view)
+//                val view: View = layoutInflater
+//                    .inflate(R.layout.list_item_sleep_night, parent, false)
+                val binding = ListItemSleepNightBinding.inflate(layoutInflater, parent, false)
+//                return SleepViewHolder(view)
+                return SleepViewHolder(binding)
             }
         }
     }
+
+}
+
+class SleepNightDiffCallback : DiffUtil.ItemCallback<SleepNight>() {
+
+    override fun areItemsTheSame(oldItem: SleepNight, newItem: SleepNight) =
+        oldItem.nightId == newItem.nightId
+
+    override fun areContentsTheSame(oldItem: SleepNight, newItem: SleepNight)=
+        oldItem == newItem
 
 }
