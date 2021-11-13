@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.databinding.ListItemSleepNightBinding
+import com.example.android.trackmysleepquality.databinding.ListItemSleepNightUpBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,7 +37,8 @@ import kotlinx.coroutines.withContext
 * */
 
 private val ITEM_VIEW_TYPE_HEADER = 0
-private val ITEM_VIEW_TYPE_ITEM = 1
+private val ITEM_VIEW_TYPE_ITEM_DOWN = 1
+private val ITEM_VIEW_TYPE_ITEM_UP = 2
 
 class SleepNightAdapter(val clickListener: SleepNightListener) :
     ListAdapter<DataItem, RecyclerView.ViewHolder>(SleepNightDiffCallback()) {
@@ -58,14 +60,19 @@ class SleepNightAdapter(val clickListener: SleepNightListener) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             ITEM_VIEW_TYPE_HEADER -> TextViewHolder.from(parent)
-            ITEM_VIEW_TYPE_ITEM -> SleepViewHolder.from(parent)
+            ITEM_VIEW_TYPE_ITEM_DOWN -> SleepViewHolderDown.from(parent)
+            ITEM_VIEW_TYPE_ITEM_UP -> SleepViewHolderUp.from(parent)
             else -> throw ClassCastException("Unknown viewType ${viewType}")
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is SleepViewHolder -> {
+            is SleepViewHolderDown -> {
+                val nightItem = getItem(position) as SleepNightItem
+                holder.bind(nightItem.sleepNight, clickListener)
+            }
+            is SleepViewHolderUp -> {
                 val nightItem = getItem(position) as SleepNightItem
                 holder.bind(nightItem.sleepNight, clickListener)
             }
@@ -75,7 +82,7 @@ class SleepNightAdapter(val clickListener: SleepNightListener) :
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is Header -> ITEM_VIEW_TYPE_HEADER
-            is SleepNightItem -> ITEM_VIEW_TYPE_ITEM
+            is SleepNightItem -> if((getItem(position) as SleepNightItem).sleepNight.sleepQuality < 3) ITEM_VIEW_TYPE_ITEM_DOWN else ITEM_VIEW_TYPE_ITEM_UP
         }
     }
 
@@ -89,7 +96,7 @@ class SleepNightAdapter(val clickListener: SleepNightListener) :
         }
     }
 
-    class SleepViewHolder private constructor(val binding: ListItemSleepNightBinding):
+    class SleepViewHolderDown private constructor(val binding: ListItemSleepNightBinding):
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: SleepNight, clickListener: SleepNightListener) {
@@ -100,14 +107,32 @@ class SleepNightAdapter(val clickListener: SleepNightListener) :
         }
 
         companion object {
-            fun from(parent: ViewGroup): SleepViewHolder {
+            fun from(parent: ViewGroup): SleepViewHolderDown {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = ListItemSleepNightBinding.inflate(layoutInflater, parent, false)
-                return SleepViewHolder(binding)
+                return SleepViewHolderDown(binding)
             }
         }
     }
 
+    class SleepViewHolderUp private constructor(val binding: ListItemSleepNightUpBinding):
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: SleepNight, clickListener: SleepNightListener) {
+            binding.sleep = item
+            binding.clickListener = clickListener
+            // Usefull when using binding adapters in a RecyclerView
+            binding.executePendingBindings()
+        }
+
+        companion object {
+            fun from(parent: ViewGroup): SleepViewHolderUp {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = ListItemSleepNightUpBinding.inflate(layoutInflater, parent, false)
+                return SleepViewHolderUp(binding)
+            }
+        }
+    }
 }
 
 class SleepNightDiffCallback : DiffUtil.ItemCallback<DataItem>() {
