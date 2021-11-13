@@ -15,6 +15,25 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/*
+* Two ways of adding headers
+*
+* First method
+*
+* One way to add headers to a list is to modify your adapter to use a different ViewHolder
+* by checking indexes where your header needs to be shown.
+* The Adapter will be responsible to show a header at the top of the table.
+*
+* Second method
+*
+* Another way to add headers is to modify the backing dataset for your data grid.
+* You can modify the list to include items to represent a header.
+*
+* Using a different ViewHolder by checking indexes for headers gives more freedom on
+* the layout of the header.
+*
+*
+* */
 
 private val ITEM_VIEW_TYPE_HEADER = 0
 private val ITEM_VIEW_TYPE_ITEM = 1
@@ -109,6 +128,13 @@ class SleepNightListener(val clickListener: (sleepId: Long) -> Unit) {
     fun onClick(night: SleepNight) = clickListener(night.nightId)
 }
 
+/*
+* A sealed class defines a closed type, which means that all subclasses of DataItem must
+* be defined in this file. As a result, the number of subclasses is known to the compiler.
+*
+* It's not possible for another part of your code to define a new type of DataItem that
+* could break your adapter.
+* */
 sealed class DataItem { abstract val id: Long }
 
 data class SleepNightItem(val sleepNight: SleepNight): DataItem() {
