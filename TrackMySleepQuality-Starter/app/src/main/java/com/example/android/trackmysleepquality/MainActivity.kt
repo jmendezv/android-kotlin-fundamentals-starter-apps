@@ -36,6 +36,8 @@ import androidx.appcompat.app.AppCompatActivity
  * - ViewModel Factory
  * - Using Backing Properties to protect MutableLiveData
  * - Observable state LiveData variables to trigger navigation
+ * keytool -list -v -keystore debug.keystore -alias androiddebugkey -storepass android -keypass android
+ * ./gradlew signingReport
  */
 
 /**

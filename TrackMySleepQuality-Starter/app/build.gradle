@@ -31,14 +31,35 @@ android {
     }
     buildTypes {
         release {
+            // Enables code shrinking for the release build type
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    lintOptions {
+        abortOnError false
     }
 
     buildFeatures {
         dataBinding true
     }
+
+    compileOptions {
+        sourceCompatibility(JavaVersion.VERSION_11)
+        targetCompatibility(JavaVersion.VERSION_11)
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
+//    flavorDimensions 'flavor1'
+//    productFlavors {
+//        product1 {
+//            dimension 'flavor1'
+//        }
+//    }
+
 }
 
 dependencies {
@@ -88,3 +109,16 @@ dependencies {
     // optional - Paging 3 Integration
     // implementation "androidx.room:room-paging:2.4.0-beta01"
 }
+
+//class PrintClass implements Plugin<Project> {
+//    @Override
+//    void apply(Project project) {
+//        project.task("printSomething") {
+//            doLast {
+//                println("Welcome from gradle world!")
+//            }
+//        }
+//    }
+//}
+//
+//apply plugin: PrintClass

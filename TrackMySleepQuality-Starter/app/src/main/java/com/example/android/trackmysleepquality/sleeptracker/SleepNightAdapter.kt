@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.SleepNight
-import com.example.android.trackmysleepquality.databinding.ListItemSleepNightBinding
+import com.example.android.trackmysleepquality.databinding.ListItemSleepNightDownBinding
 import com.example.android.trackmysleepquality.databinding.ListItemSleepNightUpBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,15 +32,13 @@ import kotlinx.coroutines.withContext
 *
 * Using a different ViewHolder by checking indexes for headers gives more freedom on
 * the layout of the header.
-*
-*
 * */
 
-private val ITEM_VIEW_TYPE_HEADER = 0
-private val ITEM_VIEW_TYPE_ITEM_DOWN = 1
-private val ITEM_VIEW_TYPE_ITEM_UP = 2
+private const val ITEM_VIEW_TYPE_HEADER = 0
+private const val ITEM_VIEW_TYPE_ITEM_DOWN = 1
+private const val ITEM_VIEW_TYPE_ITEM_UP = 2
 
-class SleepNightAdapter(val clickListener: SleepNightListener) :
+class SleepNightAdapter(private val clickListener: SleepNightListener) :
     ListAdapter<DataItem, RecyclerView.ViewHolder>(SleepNightDiffCallback()) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Default)
@@ -62,7 +60,7 @@ class SleepNightAdapter(val clickListener: SleepNightListener) :
             ITEM_VIEW_TYPE_HEADER -> TextViewHolder.from(parent)
             ITEM_VIEW_TYPE_ITEM_DOWN -> SleepViewHolderDown.from(parent)
             ITEM_VIEW_TYPE_ITEM_UP -> SleepViewHolderUp.from(parent)
-            else -> throw ClassCastException("Unknown viewType ${viewType}")
+            else -> throw ClassCastException("Unknown viewType $viewType")
         }
     }
 
@@ -82,11 +80,11 @@ class SleepNightAdapter(val clickListener: SleepNightListener) :
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is Header -> ITEM_VIEW_TYPE_HEADER
-            is SleepNightItem -> if((getItem(position) as SleepNightItem).sleepNight.sleepQuality < 3) ITEM_VIEW_TYPE_ITEM_DOWN else ITEM_VIEW_TYPE_ITEM_UP
+            is SleepNightItem -> if ((getItem(position) as SleepNightItem).sleepNight.sleepQuality < 3) ITEM_VIEW_TYPE_ITEM_DOWN else ITEM_VIEW_TYPE_ITEM_UP
         }
     }
 
-    class TextViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    class TextViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         companion object {
             fun from(parent: ViewGroup): TextViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
@@ -96,32 +94,32 @@ class SleepNightAdapter(val clickListener: SleepNightListener) :
         }
     }
 
-    class SleepViewHolderDown private constructor(val binding: ListItemSleepNightBinding):
+    class SleepViewHolderDown private constructor(private val binding: ListItemSleepNightDownBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: SleepNight, clickListener: SleepNightListener) {
             binding.sleep = item
             binding.clickListener = clickListener
-            // Usefull when using binding adapters in a RecyclerView
+            // Useful when using binding adapters in a RecyclerView
             binding.executePendingBindings()
         }
 
         companion object {
             fun from(parent: ViewGroup): SleepViewHolderDown {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ListItemSleepNightBinding.inflate(layoutInflater, parent, false)
+                val binding = ListItemSleepNightDownBinding.inflate(layoutInflater, parent, false)
                 return SleepViewHolderDown(binding)
             }
         }
     }
 
-    class SleepViewHolderUp private constructor(val binding: ListItemSleepNightUpBinding):
+    class SleepViewHolderUp private constructor(private val binding: ListItemSleepNightUpBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: SleepNight, clickListener: SleepNightListener) {
             binding.sleep = item
             binding.clickListener = clickListener
-            // Usefull when using binding adapters in a RecyclerView
+            // Useful when using binding adapters in a RecyclerView
             binding.executePendingBindings()
         }
 
@@ -160,12 +158,14 @@ class SleepNightListener(val clickListener: (sleepId: Long) -> Unit) {
 * It's not possible for another part of your code to define a new type of DataItem that
 * could break your adapter.
 * */
-sealed class DataItem { abstract val id: Long }
+sealed class DataItem {
+    abstract val id: Long
+}
 
-data class SleepNightItem(val sleepNight: SleepNight): DataItem() {
+data class SleepNightItem(val sleepNight: SleepNight) : DataItem() {
     override val id = sleepNight.nightId
 }
 
-object Header: DataItem() {
+object Header : DataItem() {
     override val id = Long.MIN_VALUE
 }
