@@ -39,9 +39,9 @@ class SleepTrackerViewModel(
 
     val nights: LiveData<List<SleepNight>> = database.getAllNights()
 
-    private val _navigateToSleepQuality = MutableLiveData<SleepNight>()
+    private val _navigateToSleepQuality = MutableLiveData<SleepNight?>()
 
-    val navigateToSleepQuality: LiveData<SleepNight>
+    val navigateToSleepQuality: LiveData<SleepNight?>
         get() = _navigateToSleepQuality
 
     val nightsString: LiveData<Spanned> = Transformations.map(nights) { nights ->
@@ -63,7 +63,7 @@ class SleepTrackerViewModel(
     val showSnackBarEvent: LiveData<Boolean>
         get() = _showSnackbarEvent
 
-    private val _navigateToSleepDetail = MutableLiveData<Long>()
+    private val _navigateToSleepDetail = MutableLiveData<Long?>()
     val navigateToSleepDetail
         get() = _navigateToSleepDetail
 
@@ -94,7 +94,7 @@ class SleepTrackerViewModel(
         }
     }
 
-    suspend fun insert(newNight: SleepNight) {
+    private suspend fun insert(newNight: SleepNight) {
 //        withContext(Dispatchers.IO) {
             database.insert(newNight)
 //        }
