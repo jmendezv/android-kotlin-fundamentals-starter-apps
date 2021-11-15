@@ -64,6 +64,12 @@ class SleepNightAdapter(private val clickListener: SleepNightListener) :
         }
     }
 
+    /*
+    * holder is either:
+    * + SleepViewHolderDown
+    * + SleepViewHolderUp
+    *
+    * */
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is SleepViewHolderDown -> {
