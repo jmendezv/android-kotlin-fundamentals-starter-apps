@@ -41,7 +41,8 @@ interface MarsApiService {
     // GET defines the endpoint for the web service URL
     @GET("realestate")
 //    fun getProperties(): Call<String>
-    fun getProperties(): Call<List<MarsProperty>>
+//    fun getProperties(): Call<List<MarsProperty>>
+    suspend fun getProperties(): List<MarsProperty>
 }
 
 // Singleton Retrofit object that implements MarsApiService
