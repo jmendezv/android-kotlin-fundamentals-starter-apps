@@ -17,16 +17,16 @@
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs"
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     defaultConfig {
         applicationId "com.example.android.marsrealestate"
-        minSdkVersion 21
-        targetSdkVersion 30
+        minSdkVersion 24
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
     }
@@ -45,7 +45,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$version_kotlin"
+    //implementation "org.jetbrains.kotlin:kotlin-stdlib:$version_kotlin"
 
     // Constraint Layout
     implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
