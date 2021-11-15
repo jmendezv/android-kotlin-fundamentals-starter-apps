@@ -17,7 +17,6 @@
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-//apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs"
 
@@ -39,6 +38,13 @@ android {
     buildFeatures {
         dataBinding true
     }
+    compileOptions {
+        sourceCompatibility(JavaVersion.VERSION_1_8)
+        targetCompatibility(JavaVersion.VERSION_1_8)
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 dependencies {
@@ -56,6 +62,14 @@ dependencies {
     // Navigation
     implementation "android.arch.navigation:navigation-fragment-ktx:$version_navigation"
     implementation "android.arch.navigation:navigation-ui-ktx:$version_navigation"
+
+    // Retrofit, a REST client
+    implementation("com.squareup.retrofit2:retrofit:$version_retrofit")
+    //implementation("com.squareup.retrofit2:converter-scalars:$version_retrofit")
+    implementation("com.squareup.retrofit2:converter-moshi:$version_retrofit")
+
+    // Moshi, an Android JSON parser
+    implementation("com.squareup.moshi:moshi-kotlin:$version_moshi")
 
     // Core with Ktx
     implementation "androidx.core:core-ktx:$version_core"
