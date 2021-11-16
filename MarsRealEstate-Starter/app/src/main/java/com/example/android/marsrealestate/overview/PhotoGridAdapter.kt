@@ -26,15 +26,18 @@ import com.example.android.marsrealestate.databinding.GridViewItemBinding
 import com.example.android.marsrealestate.network.MarsProperty
 
 
-class PhotoGridAdapter(private val onClickListener: OnClickListener) : ListAdapter<MarsProperty,
+class PhotoGridAdapter(val onClickListener: OnClickListener) : ListAdapter<MarsProperty,
         PhotoGridAdapter.MarsPropertyViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): PhotoGridAdapter.MarsPropertyViewHolder {
-        return MarsPropertyViewHolder(GridViewItemBinding.inflate(
-            LayoutInflater.from(parent.context)))
+        return MarsPropertyViewHolder(
+            GridViewItemBinding.inflate(
+                LayoutInflater.from(parent.context)
+            )
+        )
     }
 
     // Holder represents one element
@@ -46,9 +49,10 @@ class PhotoGridAdapter(private val onClickListener: OnClickListener) : ListAdapt
         holder.bind(marsProperty)
     }
 
-    class MarsPropertyViewHolder(private var binding:
-                                 GridViewItemBinding
-    ): RecyclerView.ViewHolder(binding.root) {
+    class MarsPropertyViewHolder(
+        private var binding:
+        GridViewItemBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(marsProperty: MarsProperty) {
             binding.property = marsProperty
@@ -72,6 +76,7 @@ class PhotoGridAdapter(private val onClickListener: OnClickListener) : ListAdapt
     class OnClickListener(val clickListener: (MarsProperty) -> Unit) {
         fun onClick(marsProperty: MarsProperty) = clickListener(marsProperty)
     }
-
 }
+
+
 
