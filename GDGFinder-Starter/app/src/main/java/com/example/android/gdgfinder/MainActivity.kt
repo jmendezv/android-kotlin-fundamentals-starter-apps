@@ -30,7 +30,11 @@ import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.android.gdgfinder.databinding.ActivityMainBinding
-
+/*
+* https://developer.android.com/codelabs/kotlin-android-training-material-design-dimens-colors#3
+*
+*
+* */
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
