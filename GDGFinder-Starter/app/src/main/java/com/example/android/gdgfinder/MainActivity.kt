@@ -35,7 +35,7 @@ import java.io.BufferedReader
 import java.io.InputStream
 
 /*
-* https://developer.android.com/codelabs/kotlin-android-training-material-design-dimens-colors#3
+* https://developer.android.com/codelabs/kotlin-android-training-material-design-dimens-colors#6
 *
 * Styles and themes on Android allow you to separate the details of your app design from the UI
 * structure and behavior, similar to stylesheets in web design.
