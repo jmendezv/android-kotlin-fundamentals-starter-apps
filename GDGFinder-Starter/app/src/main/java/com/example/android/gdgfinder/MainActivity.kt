@@ -50,6 +50,16 @@ import java.io.InputStream
 * If you want child views to inherit styles, apply the style with the android:theme attribute.
 * Android color tool at material.io
 *
+* A Theme is used to set the global theme for the entire app. A ThemeOverlay is used to override
+* (or "overlay") that theme for specific views, especially the toolbar.
+*
+* You do this by applying the desired theme to the root view of the view hierarchy for which you
+* want to use it.
+*
+* https://material.io/tools/color/.
+*
+*
+*
 * */
 class MainActivity : AppCompatActivity() {
 
