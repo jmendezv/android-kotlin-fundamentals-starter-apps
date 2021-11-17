@@ -17,6 +17,7 @@
 
 package com.example.android.gdgfinder
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.transition.TransitionManager
 import android.view.View
@@ -30,9 +31,24 @@ import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.android.gdgfinder.databinding.ActivityMainBinding
+import java.io.BufferedReader
+import java.io.InputStream
+
 /*
 * https://developer.android.com/codelabs/kotlin-android-training-material-design-dimens-colors#3
 *
+* Styles and themes on Android allow you to separate the details of your app design from the UI
+* structure and behavior, similar to stylesheets in web design.
+*
+* A style is a collection of attributes that specify the appearance for a single View.
+*
+* A theme is a collection of attributes that's applied to an entire app, activity, or view
+* hierarchy —not just an individual view.
+*
+* Themes can also apply styles to non-view elements, such as the status bar and window background.
+*
+* If you want child views to inherit styles, apply the style with the android:theme attribute.
+* Android color tool at material.io
 *
 * */
 class MainActivity : AppCompatActivity() {
@@ -43,6 +59,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
+        setupResources()
         setupNavigation()
     }
 
@@ -83,4 +100,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun setupResources() {
+        val assetsReadme: BufferedReader = applicationContext.assets.open("readme.txt").bufferedReader()
+        val rawReadme = applicationContext.resources.openRawResource(R.raw.readme)
+    }
+
 }
