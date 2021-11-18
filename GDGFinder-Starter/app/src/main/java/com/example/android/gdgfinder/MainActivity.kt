@@ -53,6 +53,8 @@ import java.io.InputStream
 * A Theme is used to set the global theme for the entire app. A ThemeOverlay is used to override
 * (or "overlay") that theme for specific views, especially the toolbar.
 *
+* Themes are a collection of named resources, useful broadly across an app.
+*
 * You do this by applying the desired theme to the root view of the view hierarchy for which you
 * want to use it.
 *
